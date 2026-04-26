@@ -1,427 +1,293 @@
-var sf = new Snowflakes({
-    color: "#ffd700",
-    minSize: 20
-});
-var url_string = window.location.href; //window.location.href
-var url = new URL(url_string);
-var c = url.searchParams.get("name");
-console.log(c);
-if (c != null) {
-    document.getElementById("name").innerHTML = c;
-    document.getElementById("nae").innerHTML = c;
-}
-$(".main").fadeOut(1);
-$('#play').click(function () {
-    $(".loader").fadeOut(1500);
-    $(".main").fadeIn("slow");
-    sf.destroy();
-    $('.balloon-border').animate({
-        top: -500
-    }, 8000);
-    var audio = $('.song')[0];
-    audio.play();
+const memoriesGalleryGrid = document.querySelector(".gallery-grid");
+const memoryImages = [
+    "Happy Birthday_files/Pictures/ML/The First Picture.jpeg",
+    "Happy Birthday_files/Pictures/ML/Kayaking.jpeg",
+    "Happy Birthday_files/Pictures/ML/four smiles & vidhan soudha.jpg",
+    "Happy Birthday_files/Pictures/ML/Birthday Glow.jpg",
+    "Happy Birthday_files/Pictures/ML/Chaos and Fun.jpg",
+    "Happy Birthday_files/Pictures/ML/Sigma smiles.jpg",
+    "Happy Birthday_files/Pictures/ML/Bengaluru Fort.jpg",
+    "Happy Birthday_files/Pictures/ML/Godavari gattu.jpg",
+    "Happy Birthday_files/Pictures/ML/sweet truffles.jpg",
+    "Happy Birthday_files/Pictures/ML/US!!.jpg",
+    "Happy Birthday_files/Pictures/ML/two life jackets zero worries.jpeg",
+    "Happy Birthday_files/Pictures/ML/Tales of HYD.jpg",
+    "Happy Birthday_files/Pictures/ML/2k25 cake.jpg",
+    "Happy Birthday_files/Pictures/ML/Bhadrachala ramuni blessings.jpg",
+    "Happy Birthday_files/Pictures/ML/Dosa with the best person.jpg",
+    "Happy Birthday_files/Pictures/ML/Caught in the moment.jpg",
+    "Happy Birthday_files/Pictures/ML/Smiles at Mysuru.jpg",
+    "Happy Birthday_files/Pictures/ML/PET Master achievements.jpg",
+    "Happy Birthday_files/Pictures/ML/shared kunafa and smiles.jpg",
+    "Happy Birthday_files/Pictures/ML/Marina Days.jpg",
+    "Happy Birthday_files/Pictures/ML/Nandi Hill rides.jpg",
+    "Happy Birthday_files/Pictures/ML/Dog Love.jpeg",
+    "Happy Birthday_files/Pictures/ML/sweet 24.jpg",
+    "Happy Birthday_files/Pictures/ML/Badminton Teamspirit.jpg",
+    "Happy Birthday_files/Pictures/ML/Smash the shuttle.jpg",
+    "Happy Birthday_files/Pictures/ML/Smiles that stayed.jpg",
+    "Happy Birthday_files/Pictures/ML/Forum Plans big memories.jpg"
+];
+const revealDelayClasses = ["", "delay-1", "delay-2"];
 
-});
-var typed = new Typed("#typed", {
-    stringsElement: '#typed-strings',
-    typeSpeed: 30,
-    backSpeed: 10,
-    loop: true
-});
-var retina = window.devicePixelRatio,
+const prettifyMemoryLabel = (imagePath) => {
+    const filename = imagePath.split("/").pop() || "memory";
+    return filename
+        .replace(/\.[^.]+$/, "")
+        .replace(/[_-]+/g, " ")
+        .replace(/\s+/g, " ")
+        .trim()
+        .toLowerCase();
+};
 
-    // Math shorthands
-    PI = Math.PI,
-    sqrt = Math.sqrt,
-    round = Math.round,
-    random = Math.random,
-    cos = Math.cos,
-    sin = Math.sin,
+const randomCardRotation = () => {
+    const magnitude = 2 + Math.floor(Math.random() * 4);
+    return `${Math.random() < 0.5 ? -magnitude : magnitude}deg`;
+};
 
-    // Local WindowAnimationTiming interface
-    rAF = window.requestAnimationFrame,
-    cAF = window.cancelAnimationFrame || window.cancelRequestAnimationFrame,
-    _now = Date.now || function () {
-        return new Date().getTime();
-    };
+let lightboxTriggers = [];
 
-// Local WindowAnimationTiming interface polyfill
-(function (w) {
-    /**
-     * Fallback implementation.
-     */
-    var prev = _now();
+const bindLightboxTriggers = () => {
+    lightboxTriggers = Array.from(document.querySelectorAll("[data-gallery-image], .polaroid img"));
 
-    function fallback(fn) {
-        var curr = _now();
-        var ms = Math.max(0, 16 - (curr - prev));
-        var req = setTimeout(fn, ms);
-        prev = curr;
-        return req;
-    }
-
-    /**
-     * Cancel.
-     */
-    var cancel = w.cancelAnimationFrame ||
-        w.webkitCancelAnimationFrame ||
-        w.clearTimeout;
-
-    rAF = w.requestAnimationFrame ||
-        w.webkitRequestAnimationFrame ||
-        fallback;
-
-    cAF = function (id) {
-        cancel.call(w, id);
-    };
-}(window));
-
-document.addEventListener("DOMContentLoaded", function () {
-    var speed = 50,
-        duration = (1.0 / speed),
-        confettiRibbonCount = 10,
-        ribbonPaperCount = 15,
-        ribbonPaperDist = 8.0,
-        ribbonPaperThick = 8.0,
-        confettiPaperCount = 10,
-        DEG_TO_RAD = PI / 180,
-        RAD_TO_DEG = 180 / PI,
-        colors = [
-            ["#df0049", "#660671"],
-            ["#00e857", "#005291"],
-            ["#2bebbc", "#05798a"],
-            ["#ffd200", "#b06c00"]
-        ];
-
-    function Vector2(_x, _y) {
-        this.x = _x, this.y = _y;
-        this.Length = function () {
-            return sqrt(this.SqrLength());
-        }
-        this.SqrLength = function () {
-            return this.x * this.x + this.y * this.y;
-        }
-        this.Add = function (_vec) {
-            this.x += _vec.x;
-            this.y += _vec.y;
-        }
-        this.Sub = function (_vec) {
-            this.x -= _vec.x;
-            this.y -= _vec.y;
-        }
-        this.Div = function (_f) {
-            this.x /= _f;
-            this.y /= _f;
-        }
-        this.Mul = function (_f) {
-            this.x *= _f;
-            this.y *= _f;
-        }
-        this.Normalize = function () {
-            var sqrLen = this.SqrLength();
-            if (sqrLen != 0) {
-                var factor = 1.0 / sqrt(sqrLen);
-                this.x *= factor;
-                this.y *= factor;
-            }
-        }
-        this.Normalized = function () {
-            var sqrLen = this.SqrLength();
-            if (sqrLen != 0) {
-                var factor = 1.0 / sqrt(sqrLen);
-                return new Vector2(this.x * factor, this.y * factor);
-            }
-            return new Vector2(0, 0);
-        }
-    }
-    Vector2.Lerp = function (_vec0, _vec1, _t) {
-        return new Vector2((_vec1.x - _vec0.x) * _t + _vec0.x, (_vec1.y - _vec0.y) * _t + _vec0.y);
-    }
-    Vector2.Distance = function (_vec0, _vec1) {
-        return sqrt(Vector2.SqrDistance(_vec0, _vec1));
-    }
-    Vector2.SqrDistance = function (_vec0, _vec1) {
-        var x = _vec0.x - _vec1.x;
-        var y = _vec0.y - _vec1.y;
-        return (x * x + y * y + z * z);
-    }
-    Vector2.Scale = function (_vec0, _vec1) {
-        return new Vector2(_vec0.x * _vec1.x, _vec0.y * _vec1.y);
-    }
-    Vector2.Min = function (_vec0, _vec1) {
-        return new Vector2(Math.min(_vec0.x, _vec1.x), Math.min(_vec0.y, _vec1.y));
-    }
-    Vector2.Max = function (_vec0, _vec1) {
-        return new Vector2(Math.max(_vec0.x, _vec1.x), Math.max(_vec0.y, _vec1.y));
-    }
-    Vector2.ClampMagnitude = function (_vec0, _len) {
-        var vecNorm = _vec0.Normalized;
-        return new Vector2(vecNorm.x * _len, vecNorm.y * _len);
-    }
-    Vector2.Sub = function (_vec0, _vec1) {
-        return new Vector2(_vec0.x - _vec1.x, _vec0.y - _vec1.y, _vec0.z - _vec1.z);
-    }
-
-    function EulerMass(_x, _y, _mass, _drag) {
-        this.position = new Vector2(_x, _y);
-        this.mass = _mass;
-        this.drag = _drag;
-        this.force = new Vector2(0, 0);
-        this.velocity = new Vector2(0, 0);
-        this.AddForce = function (_f) {
-            this.force.Add(_f);
-        }
-        this.Integrate = function (_dt) {
-            var acc = this.CurrentForce(this.position);
-            acc.Div(this.mass);
-            var posDelta = new Vector2(this.velocity.x, this.velocity.y);
-            posDelta.Mul(_dt);
-            this.position.Add(posDelta);
-            acc.Mul(_dt);
-            this.velocity.Add(acc);
-            this.force = new Vector2(0, 0);
-        }
-        this.CurrentForce = function (_pos, _vel) {
-            var totalForce = new Vector2(this.force.x, this.force.y);
-            var speed = this.velocity.Length();
-            var dragVel = new Vector2(this.velocity.x, this.velocity.y);
-            dragVel.Mul(this.drag * this.mass * speed);
-            totalForce.Sub(dragVel);
-            return totalForce;
-        }
-    }
-
-    function ConfettiPaper(_x, _y) {
-        this.pos = new Vector2(_x, _y);
-        this.rotationSpeed = (random() * 600 + 800);
-        this.angle = DEG_TO_RAD * random() * 360;
-        this.rotation = DEG_TO_RAD * random() * 360;
-        this.cosA = 1.0;
-        this.size = 5.0;
-        this.oscillationSpeed = (random() * 1.5 + 0.5);
-        this.xSpeed = 40.0;
-        this.ySpeed = (random() * 60 + 50.0);
-        this.corners = new Array();
-        this.time = random();
-        var ci = round(random() * (colors.length - 1));
-        this.frontColor = colors[ci][0];
-        this.backColor = colors[ci][1];
-        for (var i = 0; i < 4; i++) {
-            var dx = cos(this.angle + DEG_TO_RAD * (i * 90 + 45));
-            var dy = sin(this.angle + DEG_TO_RAD * (i * 90 + 45));
-            this.corners[i] = new Vector2(dx, dy);
-        }
-        this.Update = function (_dt) {
-            this.time += _dt;
-            this.rotation += this.rotationSpeed * _dt;
-            this.cosA = cos(DEG_TO_RAD * this.rotation);
-            this.pos.x += cos(this.time * this.oscillationSpeed) * this.xSpeed * _dt
-            this.pos.y += this.ySpeed * _dt;
-            if (this.pos.y > ConfettiPaper.bounds.y) {
-                this.pos.x = random() * ConfettiPaper.bounds.x;
-                this.pos.y = 0;
-            }
-        }
-        this.Draw = function (_g) {
-            if (this.cosA > 0) {
-                _g.fillStyle = this.frontColor;
-            } else {
-                _g.fillStyle = this.backColor;
-            }
-            _g.beginPath();
-            _g.moveTo((this.pos.x + this.corners[0].x * this.size) * retina, (this.pos.y + this.corners[0].y * this.size * this.cosA) * retina);
-            for (var i = 1; i < 4; i++) {
-                _g.lineTo((this.pos.x + this.corners[i].x * this.size) * retina, (this.pos.y + this.corners[i].y * this.size * this.cosA) * retina);
-            }
-            _g.closePath();
-            _g.fill();
-        }
-    }
-    ConfettiPaper.bounds = new Vector2(0, 0);
-
-    function ConfettiRibbon(_x, _y, _count, _dist, _thickness, _angle, _mass, _drag) {
-        this.particleDist = _dist;
-        this.particleCount = _count;
-        this.particleMass = _mass;
-        this.particleDrag = _drag;
-        this.particles = new Array();
-        var ci = round(random() * (colors.length - 1));
-        this.frontColor = colors[ci][0];
-        this.backColor = colors[ci][1];
-        this.xOff = (cos(DEG_TO_RAD * _angle) * _thickness);
-        this.yOff = (sin(DEG_TO_RAD * _angle) * _thickness);
-        this.position = new Vector2(_x, _y);
-        this.prevPosition = new Vector2(_x, _y);
-        this.velocityInherit = (random() * 2 + 4);
-        this.time = random() * 100;
-        this.oscillationSpeed = (random() * 2 + 2);
-        this.oscillationDistance = (random() * 40 + 40);
-        this.ySpeed = (random() * 40 + 80);
-        for (var i = 0; i < this.particleCount; i++) {
-            this.particles[i] = new EulerMass(_x, _y - i * this.particleDist, this.particleMass, this.particleDrag);
-        }
-        this.Update = function (_dt) {
-            var i = 0;
-            this.time += _dt * this.oscillationSpeed;
-            this.position.y += this.ySpeed * _dt;
-            this.position.x += cos(this.time) * this.oscillationDistance * _dt;
-            this.particles[0].position = this.position;
-            var dX = this.prevPosition.x - this.position.x;
-            var dY = this.prevPosition.y - this.position.y;
-            var delta = sqrt(dX * dX + dY * dY);
-            this.prevPosition = new Vector2(this.position.x, this.position.y);
-            for (i = 1; i < this.particleCount; i++) {
-                var dirP = Vector2.Sub(this.particles[i - 1].position, this.particles[i].position);
-                dirP.Normalize();
-                dirP.Mul((delta / _dt) * this.velocityInherit);
-                this.particles[i].AddForce(dirP);
-            }
-            for (i = 1; i < this.particleCount; i++) {
-                this.particles[i].Integrate(_dt);
-            }
-            for (i = 1; i < this.particleCount; i++) {
-                var rp2 = new Vector2(this.particles[i].position.x, this.particles[i].position.y);
-                rp2.Sub(this.particles[i - 1].position);
-                rp2.Normalize();
-                rp2.Mul(this.particleDist);
-                rp2.Add(this.particles[i - 1].position);
-                this.particles[i].position = rp2;
-            }
-            if (this.position.y > ConfettiRibbon.bounds.y + this.particleDist * this.particleCount) {
-                this.Reset();
-            }
-        }
-        this.Reset = function () {
-            this.position.y = -random() * ConfettiRibbon.bounds.y;
-            this.position.x = random() * ConfettiRibbon.bounds.x;
-            this.prevPosition = new Vector2(this.position.x, this.position.y);
-            this.velocityInherit = random() * 2 + 4;
-            this.time = random() * 100;
-            this.oscillationSpeed = random() * 2.0 + 1.5;
-            this.oscillationDistance = (random() * 40 + 40);
-            this.ySpeed = random() * 40 + 80;
-            var ci = round(random() * (colors.length - 1));
-            this.frontColor = colors[ci][0];
-            this.backColor = colors[ci][1];
-            this.particles = new Array();
-            for (var i = 0; i < this.particleCount; i++) {
-                this.particles[i] = new EulerMass(this.position.x, this.position.y - i * this.particleDist, this.particleMass, this.particleDrag);
-            }
-        };
-        this.Draw = function (_g) {
-            for (var i = 0; i < this.particleCount - 1; i++) {
-                var p0 = new Vector2(this.particles[i].position.x + this.xOff, this.particles[i].position.y + this.yOff);
-                var p1 = new Vector2(this.particles[i + 1].position.x + this.xOff, this.particles[i + 1].position.y + this.yOff);
-                if (this.Side(this.particles[i].position.x, this.particles[i].position.y, this.particles[i + 1].position.x, this.particles[i + 1].position.y, p1.x, p1.y) < 0) {
-                    _g.fillStyle = this.frontColor;
-                    _g.strokeStyle = this.frontColor;
-                } else {
-                    _g.fillStyle = this.backColor;
-                    _g.strokeStyle = this.backColor;
-                }
-                if (i == 0) {
-                    _g.beginPath();
-                    _g.moveTo(this.particles[i].position.x * retina, this.particles[i].position.y * retina);
-                    _g.lineTo(this.particles[i + 1].position.x * retina, this.particles[i + 1].position.y * retina);
-                    _g.lineTo(((this.particles[i + 1].position.x + p1.x) * 0.5) * retina, ((this.particles[i + 1].position.y + p1.y) * 0.5) * retina);
-                    _g.closePath();
-                    _g.stroke();
-                    _g.fill();
-                    _g.beginPath();
-                    _g.moveTo(p1.x * retina, p1.y * retina);
-                    _g.lineTo(p0.x * retina, p0.y * retina);
-                    _g.lineTo(((this.particles[i + 1].position.x + p1.x) * 0.5) * retina, ((this.particles[i + 1].position.y + p1.y) * 0.5) * retina);
-                    _g.closePath();
-                    _g.stroke();
-                    _g.fill();
-                } else if (i == this.particleCount - 2) {
-                    _g.beginPath();
-                    _g.moveTo(this.particles[i].position.x * retina, this.particles[i].position.y * retina);
-                    _g.lineTo(this.particles[i + 1].position.x * retina, this.particles[i + 1].position.y * retina);
-                    _g.lineTo(((this.particles[i].position.x + p0.x) * 0.5) * retina, ((this.particles[i].position.y + p0.y) * 0.5) * retina);
-                    _g.closePath();
-                    _g.stroke();
-                    _g.fill();
-                    _g.beginPath();
-                    _g.moveTo(p1.x * retina, p1.y * retina);
-                    _g.lineTo(p0.x * retina, p0.y * retina);
-                    _g.lineTo(((this.particles[i].position.x + p0.x) * 0.5) * retina, ((this.particles[i].position.y + p0.y) * 0.5) * retina);
-                    _g.closePath();
-                    _g.stroke();
-                    _g.fill();
-                } else {
-                    _g.beginPath();
-                    _g.moveTo(this.particles[i].position.x * retina, this.particles[i].position.y * retina);
-                    _g.lineTo(this.particles[i + 1].position.x * retina, this.particles[i + 1].position.y * retina);
-                    _g.lineTo(p1.x * retina, p1.y * retina);
-                    _g.lineTo(p0.x * retina, p0.y * retina);
-                    _g.closePath();
-                    _g.stroke();
-                    _g.fill();
-                }
-            }
-        }
-        this.Side = function (x1, y1, x2, y2, x3, y3) {
-            return ((x1 - x2) * (y3 - y2) - (y1 - y2) * (x3 - x2));
-        }
-    }
-    ConfettiRibbon.bounds = new Vector2(0, 0);
-    confetti = {};
-    confetti.Context = function (id) {
-        var i = 0;
-        var canvas = document.getElementById(id);
-        var canvasParent = canvas.parentNode;
-        var canvasWidth = canvasParent.offsetWidth;
-        var canvasHeight = canvasParent.offsetHeight;
-        canvas.width = canvasWidth * retina;
-        canvas.height = canvasHeight * retina;
-        var context = canvas.getContext('2d');
-        var interval = null;
-        var confettiRibbons = new Array();
-        ConfettiRibbon.bounds = new Vector2(canvasWidth, canvasHeight);
-        for (i = 0; i < confettiRibbonCount; i++) {
-            confettiRibbons[i] = new ConfettiRibbon(random() * canvasWidth, -random() * canvasHeight * 2, ribbonPaperCount, ribbonPaperDist, ribbonPaperThick, 45, 1, 0.05);
-        }
-        var confettiPapers = new Array();
-        ConfettiPaper.bounds = new Vector2(canvasWidth, canvasHeight);
-        for (i = 0; i < confettiPaperCount; i++) {
-            confettiPapers[i] = new ConfettiPaper(random() * canvasWidth, random() * canvasHeight);
-        }
-        this.resize = function () {
-            canvasWidth = canvasParent.offsetWidth;
-            canvasHeight = canvasParent.offsetHeight;
-            canvas.width = canvasWidth * retina;
-            canvas.height = canvasHeight * retina;
-            ConfettiPaper.bounds = new Vector2(canvasWidth, canvasHeight);
-            ConfettiRibbon.bounds = new Vector2(canvasWidth, canvasHeight);
-        }
-        this.start = function () {
-            this.stop()
-            var context = this;
-            this.update();
-        }
-        this.stop = function () {
-            cAF(this.interval);
-        }
-        this.update = function () {
-            var i = 0;
-            context.clearRect(0, 0, canvas.width, canvas.height);
-            for (i = 0; i < confettiPaperCount; i++) {
-                confettiPapers[i].Update(duration);
-                confettiPapers[i].Draw(context);
-            }
-            for (i = 0; i < confettiRibbonCount; i++) {
-                confettiRibbons[i].Update(duration);
-                confettiRibbons[i].Draw(context);
-            }
-            this.interval = rAF(function () {
-                confetti.update();
-            });
-        }
-    };
-    var confetti = new confetti.Context('confetti');
-    confetti.start();
-    window.addEventListener('resize', function (event) {
-        confetti.resize();
+    lightboxTriggers.forEach((trigger, index) => {
+        trigger.onclick = () => openLightboxAt(index);
     });
+};
+
+if (memoriesGalleryGrid) {
+    const galleryMarkup = document.createDocumentFragment();
+
+    memoryImages.forEach((imagePath, index) => {
+        const label = prettifyMemoryLabel(imagePath);
+        const article = document.createElement("article");
+        const button = document.createElement("button");
+        const image = document.createElement("img");
+        const caption = document.createElement("p");
+        const delayClass = revealDelayClasses[index % revealDelayClasses.length];
+
+        article.className = `gallery-card reveal${delayClass ? ` ${delayClass}` : ""}`;
+        article.style.setProperty("--card-rotate", randomCardRotation());
+
+        button.className = "gallery-shot";
+        button.type = "button";
+        button.dataset.galleryImage = "";
+        button.dataset.fullSrc = imagePath;
+        button.dataset.alt = label;
+        button.dataset.caption = label;
+
+        image.src = imagePath;
+        image.alt = label;
+        image.loading = "lazy";
+        image.decoding = "async";
+
+        caption.textContent = label;
+
+        button.appendChild(image);
+        article.append(button, caption);
+        galleryMarkup.appendChild(article);
+    });
+
+    memoriesGalleryGrid.replaceChildren(galleryMarkup);
+    bindLightboxTriggers();
+}
+
+const scrollIndicator = document.getElementById("scrollIndicator");
+const memoriesSection = document.getElementById("memories");
+const revealItems = document.querySelectorAll(".reveal");
+const letterLines = document.querySelectorAll(".letter-line");
+const heartsLayer = document.getElementById("heartsLayer");
+const lightbox = document.getElementById("lightbox");
+const lightboxImage = document.getElementById("lightboxImage");
+const lightboxClose = document.getElementById("lightboxClose");
+const lightboxPrev = document.getElementById("lightboxPrev");
+const lightboxNext = document.getElementById("lightboxNext");
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+let activeLightboxMedia = lightboxImage;
+const lightboxCaption = document.createElement("p");
+let activeLightboxIndex = -1;
+
+lightboxCaption.className = "lightbox-caption";
+lightboxCaption.style.margin = "14px 0 0";
+lightboxCaption.style.color = "#fff7f0";
+lightboxCaption.style.textAlign = "center";
+lightboxCaption.style.fontSize = "0.95rem";
+lightboxCaption.style.lineHeight = "1.45";
+
+const scrollToMemories = () => {
+    if (!memoriesSection) {
+        return;
+    }
+
+    memoriesSection.scrollIntoView({
+        behavior: prefersReducedMotion.matches ? "auto" : "smooth",
+        block: "start"
+    });
+};
+
+if (scrollIndicator) {
+    scrollIndicator.addEventListener("click", scrollToMemories);
+}
+
+let autoScrollTriggered = false;
+
+letterLines.forEach((line, index) => {
+    line.style.setProperty("--line-delay", `${0.18 + (index * 0.16)}s`);
+});
+
+window.addEventListener("wheel", () => {
+    if (autoScrollTriggered || window.scrollY > 20 || prefersReducedMotion.matches) {
+        return;
+    }
+
+    autoScrollTriggered = true;
+    scrollToMemories();
+}, { passive: true });
+
+if ("IntersectionObserver" in window) {
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach((entry) => {
+            if (!entry.isIntersecting) {
+                return;
+            }
+
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+        });
+    }, {
+        threshold: 0.18
+    });
+
+    revealItems.forEach((item) => revealObserver.observe(item));
+} else {
+    revealItems.forEach((item) => item.classList.add("is-visible"));
+}
+
+if (heartsLayer && !prefersReducedMotion.matches) {
+    const heartSymbols = ["♥", "♡"];
+    const heartCount = 16;
+
+    for (let index = 0; index < heartCount; index += 1) {
+        const heart = document.createElement("span");
+        heart.className = "heart";
+        heart.textContent = heartSymbols[index % heartSymbols.length];
+        heart.style.left = `${Math.random() * 100}%`;
+        heart.style.animationDuration = `${10 + Math.random() * 10}s`;
+        heart.style.animationDelay = `${Math.random() * 8}s`;
+        heart.style.setProperty("--drift", `${-40 + Math.random() * 80}px`);
+        heart.style.fontSize = `${12 + Math.random() * 18}px`;
+        heartsLayer.appendChild(heart);
+    }
+}
+
+const setLightboxImage = (trigger) => {
+    if (!lightbox || !activeLightboxMedia) {
+        return null;
+    }
+
+    const caption = trigger.dataset?.caption || trigger.dataset?.alt || trigger.alt || "";
+    const imageSrc = trigger.dataset?.fullSrc || trigger.currentSrc || trigger.src || "";
+    const nextMedia = document.createElement("img");
+
+    nextMedia.src = imageSrc;
+    nextMedia.alt = caption;
+
+    nextMedia.className = "lightbox-image";
+    nextMedia.id = "lightboxImage";
+    activeLightboxMedia.replaceWith(nextMedia);
+    activeLightboxMedia = nextMedia;
+    lightboxCaption.textContent = caption;
+
+    if (!lightboxCaption.isConnected) {
+        activeLightboxMedia.after(lightboxCaption);
+    }
+
+    return activeLightboxMedia;
+};
+
+const updateLightboxNavState = () => {
+    if (!lightboxPrev || !lightboxNext) {
+        return;
+    }
+
+    const hasGallery = lightboxTriggers.length > 1;
+    lightboxPrev.hidden = !hasGallery;
+    lightboxNext.hidden = !hasGallery;
+};
+
+const openLightboxAt = (index) => {
+    const trigger = lightboxTriggers[index];
+
+    if (!trigger || !lightbox) {
+        return;
+    }
+
+    activeLightboxIndex = index;
+    setLightboxImage(trigger);
+    updateLightboxNavState();
+    lightbox.classList.add("is-open");
+    lightbox.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+};
+
+const moveLightbox = (direction) => {
+    if (!lightbox.classList.contains("is-open") || lightboxTriggers.length === 0) {
+        return;
+    }
+
+    const nextIndex = (activeLightboxIndex + direction + lightboxTriggers.length) % lightboxTriggers.length;
+    openLightboxAt(nextIndex);
+};
+
+const closeLightbox = () => {
+    if (!lightbox || !activeLightboxMedia) {
+        return;
+    }
+
+    lightbox.classList.remove("is-open");
+    lightbox.setAttribute("aria-hidden", "true");
+    activeLightboxMedia.removeAttribute("src");
+    activeLightboxMedia.removeAttribute("alt");
+    lightboxCaption.textContent = "";
+    activeLightboxIndex = -1;
+    document.body.style.overflow = "";
+};
+
+if (lightbox) {
+    lightbox.addEventListener("click", (event) => {
+        if (event.target instanceof HTMLElement && event.target.hasAttribute("data-lightbox-close")) {
+            closeLightbox();
+        }
+    });
+}
+
+if (lightboxClose) {
+    lightboxClose.addEventListener("click", closeLightbox);
+}
+
+if (lightboxPrev) {
+    lightboxPrev.addEventListener("click", () => moveLightbox(-1));
+}
+
+if (lightboxNext) {
+    lightboxNext.addEventListener("click", () => moveLightbox(1));
+}
+
+window.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && lightbox?.classList.contains("is-open")) {
+        closeLightbox();
+        return;
+    }
+
+    if (!lightbox?.classList.contains("is-open")) {
+        return;
+    }
+
+    if (event.key === "ArrowLeft") {
+        moveLightbox(-1);
+    }
+
+    if (event.key === "ArrowRight") {
+        moveLightbox(1);
+    }
 });

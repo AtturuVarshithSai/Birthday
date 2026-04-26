@@ -1,61 +1,118 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Happy Birthday</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <title>Happy Birthday</title>
+    <meta
+        name="description"
+        content="A Birthday page for Gummadi Jyoshna"
+    >
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lavishly+Yours&family=Playfair+Display:wght@600;700;800&family=Poppins:wght@300;400;500;600&display=swap"
+        rel="stylesheet"
+    >
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-    <div class="container">
-        <div class="row">
-            <div class="loader">
-                <button id="play">Start</button>
+    <div class="sky-glow sky-glow-left"></div>
+    <div class="sky-glow sky-glow-right"></div>
+    <div class="film-grain"></div>
+    <div class="hearts-layer" id="heartsLayer" aria-hidden="true"></div>
+
+    <main>
+        <section class="hero" id="home">
+            <div class="hero-backdrop" aria-hidden="true"></div>
+
+            <div class="hero-content">
+                <p class="hero-kicker reveal">for the heart that makes life softer</p>
+                <h1 class="reveal delay-1 lavishly-yours-regular">Happy Birthday Gummadiii</h1>
+                <p class="hero-line reveal delay-2">it&rsquo;s your day, shine your way</p>
+                <!-- <p class="hero-subtext reveal delay-3">the world is better because you&rsquo;re in it</p> -->
             </div>
-        </div>
-    </div>
-    <audio class="song" controls loop>
-        <source src="music.mp3">
-        </source>
-        Your browser isn't invited for super fun audio time.
-    </audio>
-    <canvas id="confetti"></canvas>
-    <div class="main">
-        <div class="container pt-5">
-            <div class="row">
 
-                <div class="col-12 col-xl-6 mx-auto">
-                    <img src="img/banner.png" alt="">
-                </div>
+            <button class="scroll-indicator reveal delay-4" id="scrollIndicator" type="button" aria-label="Scroll to begin">
+                <span>scroll to begin</span>
+                <span class="scroll-arrow" aria-hidden="true"></span>
+            </button>
+        </section>
 
-                <div class="col-12  text-center">
-                    <div id="name" class="area">Gaurav</div>
-                </div>
+        <section class="memories" id="memories">
+            <div class="section-copy reveal">
+                <p class="section-tag">Memory Preview</p>
+                <h2>a little collage of moments that never stopped glowing</h2>
+                <p class="section-caption">two years of laughter, chaos &amp; countless memories</p>
+            </div>
 
-                <div class="col-12 text-center">
-                    <div class="type-wrap">
-                        <div id="typed-strings" class="typing">
-                            <h2>Happy Birthday <i id="nae">Gaurav</i></h2>
-                            <h2>Have a wonderful day</h2>
-                            <h2>Filled with joy and happiness.</h2>
-                        </div>
-                        <span id="typed" style="white-space:pre;"></span>
+            <div class="polaroid-gallery">
+                <article class="polaroid polaroid-left reveal float-soft">
+                    <div class="polaroid-frame">
+                        <img src="Happy Birthday_files/Pictures/HP/HP_1.jpg" alt="Effortless smiles">
                     </div>
-                </div>
+                    <p>Effortless smiles</p>
+                </article>
 
-                <div class="col-12 col-xl-3 cake">
-                    <img src="img/cake.gif" alt="">
+                <article class="polaroid polaroid-center reveal delay-1">
+                    <div class="polaroid-frame">
+                        <img src="Happy Birthday_files/Pictures/HP/HP_2.jpeg" alt="Always with you....">
+                    </div>
+                    <p>Always with you....</p>
+                </article>
+
+                <article class="polaroid polaroid-right reveal delay-2 float-soft">
+                    <div class="polaroid-frame">
+                        <img src="Happy Birthday_files/Pictures/HP/HP_3.jpeg" alt="Soft, Calm & Stronger">
+                    </div>
+                    <p>Soft, Calm & Stronger</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="memories-gallery" id="memoriesGallery">
+            <div class="section-copy reveal">
+                <p class="section-tag">Memories Gallery</p>
+                <h2>A collection of moments I never want to forget</h2>
+                <p class="section-caption">little snapshots held close in warm light, soft colors, and forever feelings</p>
+            </div>
+
+            <div class="gallery-grid" aria-label="Memories gallery"></div>
+        </section>
+
+        <section class="letter-section" id="letterSection">
+            <div class="letter-container reveal">
+                <span class="letter-glow" aria-hidden="true"></span>
+                <div class="letter-container-inner">
+                    <p class="section-tag reveal">Letter</p>
+
+                    <div class="letter-body" aria-label="Birthday letter">
+                        <p class="letter-line reveal">Happy birthday, Jyoo 🫂</p>
+                        <p class="letter-line reveal">Some people don’t make noise when they enter your life, but slowly they become someone you can’t imagine your days without. You became that for me without even trying.</p>
+                        <p class="letter-line reveal">From random conversations to those small everyday moments, you somehow made everything feel a little better, a little lighter. Being around you has always felt easy, safe, and real — and that’s something I don’t take lightly.</p>
+                        <p class="letter-line reveal">You’ve handled so much with your own strength, even on days that weren’t kind to you, and I truly admire that about you. I just hope this year brings you more peace, more smiles, and the kind of happiness you don’t have to question.</p>
+                        <p class="letter-line reveal">You mean a lot to me, Jyoo — in a way that’s simple, genuine, and steady.</p>
+                        <p class="letter-line reveal">Thank you for being exactly who you are.</p>
+                        <p class="letter-line reveal">I hope today feels special in all the little ways that matter.</p>
+                    </div>
+
+                    <p class="letter-signoff reveal">— V</p>
                 </div>
             </div>
-        </div>
-        <img src="img/Balloon-Border.png" width="100%" class="balloon-border">
-    </div>
-</body>
-<script src="https://unpkg.com/magic-snowflakes/dist/snowflakes.min.js"></script>
-<script src="js/jquery.js"></script>
-<script src="js/typed.min.js"></script>
-<script src="js/script.js"></script>
+        </section>
 
+    </main>
+
+    <div class="lightbox" id="lightbox" aria-hidden="true">
+        <div class="lightbox-backdrop" data-lightbox-close></div>
+        <div class="lightbox-dialog" role="dialog" aria-modal="true" aria-label="Expanded gallery image">
+            <button class="lightbox-nav lightbox-prev" id="lightboxPrev" type="button" aria-label="Previous image">&#10094;</button>
+            <button class="lightbox-close" id="lightboxClose" type="button" aria-label="Close image preview">&times;</button>
+            <img class="lightbox-image" id="lightboxImage" src="" alt="">
+            <button class="lightbox-nav lightbox-next" id="lightboxNext" type="button" aria-label="Next image">&#10095;</button>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
 </html>
